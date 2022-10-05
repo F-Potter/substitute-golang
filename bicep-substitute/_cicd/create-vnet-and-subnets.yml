@@ -1,0 +1,35 @@
+pool: Rabo-Linux-Production
+
+resources:
+  repositories:
+    - repository: self
+      type: git
+
+variables:
+  - template: ../infrastructure/_variables/global.yml
+
+stages:
+- stage: DeploySubstitute
+  displayName: Substitute
+  variables:
+    - template: ../infrastructure/_variables/linux/substitute.yml
+  jobs:
+    - deployment: ConfigSubstitute
+      displayName: Substitute
+      environment: substitute
+      workspace:
+        clean: all
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - checkout: self
+            - template: ../infrastructure/pipeline-jobs/aks/create-virtualnetwork.yml
+              parameters:
+                azureSubscription: ${{variables.azureSubscription}}
+                location: ${{variables.location}}
+                environmentName: ${{variables.environmentName}}
+                resourceGroupOfSubnet: ${{variables.resourceGroupOfSubnet}}
+                vnetName: ${{variables.vnetName}}
+                vnetIPRange: ${{variables.vnetIPRange}}
+                subnetIPRangeLinux: ${{variables.subnetIPRangeLinux}}

@@ -1,0 +1,2 @@
+variables:
+  kubernetesVersion: 1.23.8

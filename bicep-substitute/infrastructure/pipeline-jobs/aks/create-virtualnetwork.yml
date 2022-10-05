@@ -1,0 +1,38 @@
+parameters:
+  - name: azureSubscription
+    type: string
+  - name: location
+    type: string
+  - name: environmentName
+    type: string
+  - name: resourceGroupOfSubnet
+    type: string
+  - name: vnetName
+    type: string
+  - name: vnetIPRange
+    type: string
+  - name: subnetIPRangeLinux
+    type: string
+
+steps:
+- script: |
+    az bicep install
+  displayName: 'Install Bicep'
+- task: AzureCLI@2
+  displayName: Create Virtual Network
+  inputs:
+    azureSubscription: ${{parameters.azureSubscription}}
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az deployment sub create `
+        --name agents-${{parameters.environmentName}} `
+        --location ${{parameters.location}} `
+        --template-file $Env:BUILD_SOURCESDIRECTORY/infrastructure/bicep-templates/_virtualnetwork.bicep `
+        --parameters `
+            location=${{parameters.location}} `
+            environmentName=${{parameters.environmentName}} `
+            resourceGroupOfSubnet=${{parameters.resourceGroupOfSubnet}} `
+            vnetName=${{parameters.vnetName}} `
+            vnetIPRange=${{parameters.vnetIPRange}} `
+            subnetIPRangeLinux=${{parameters.subnetIPRangeLinux}}

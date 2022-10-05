@@ -1,0 +1,47 @@
+pool: Rabo-Linux-Production
+
+resources:
+  repositories:
+    - repository: self
+      type: git
+
+variables:
+  - template: ../infrastructure/_variables/global.yml
+
+stages:
+- stage: DeploySubstitute
+  displayName: Substitute
+  variables:
+    - template: ../infrastructure/_variables/linux/substitute.yml
+  jobs:
+    - deployment: ConfigSubstitute
+      displayName: Substitute
+      environment: substitute
+      workspace:
+        clean: all
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - checkout: self
+            - template: ../infrastructure/pipeline-jobs/aks/create-cluster.yml
+              parameters:
+                azureSubscription: ${{variables.azureSubscription}}
+                location: ${{variables.location}}
+                environmentName: ${{variables.environmentName}}
+                resourceGroupName: ${{variables.resourceGroupName}}
+                resourceGroupOfSubnet: ${{variables.resourceGroupOfSubnet}}
+                resourceGroupOfRouteTable: ${{variables.resourceGroupOfRouteTable}}
+                kubernetesVersion: ${{variables.kubernetesVersion}}
+                clusterName: ${{variables.clusterName}}
+                networkPlugin: ${{variables.networkPlugin}}
+                vnetName: ${{variables.vnetName}}
+                vnetId: ${{variables.vnetId}}
+                subnetName: ${{variables.subnetName}}
+                ipAddressCCCFirewall: ${{variables.ipAddressCCCFirewall}}
+                routeTableName: ${{variables.routeTableName}}
+                systemPoolSubnet: ${{variables.systemPoolSubnet}}
+                systemPoolMinCount: ${{variables.systemPoolMinCount}}
+                systemPoolMaxCount: ${{variables.systemPoolMaxCount}}
+                osType: ${{variables.osType}}
+                autoScalerProfileUnneededTime: ${{variables.autoScalerProfileUnneededTime}}

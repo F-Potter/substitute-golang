@@ -1,0 +1,66 @@
+parameters:
+  - name: azureSubscription
+    type: string
+  - name: location
+    type: string
+  - name: environmentName
+    type: string
+  - name: resourceGroupName
+    type: string
+  - name: resourceGroupOfSubnet
+    type: string
+  - name: resourceGroupOfRouteTable
+    type: string
+  - name: kubernetesVersion
+    type: string
+  - name: clusterName
+    type: string
+  - name: networkPlugin
+    type: string
+  - name: vnetName
+    type: string
+  - name: vnetId
+    type: string
+  - name: subnetName
+    type: string
+  - name: ipAddressCCCFirewall
+    type: string
+  - name: routeTableName
+    type: string
+  - name: systemPoolSubnet
+    type: string
+  - name: systemPoolMinCount
+    type: number
+  - name: systemPoolMaxCount
+    type: number
+  - name: osType
+    type: string
+  - name: autoScalerProfileUnneededTime
+    type: string
+
+steps:
+- script: |
+    az bicep install
+  displayName: 'Install Bicep'
+- task: AzureCLI@2
+  displayName: Create Cluster
+  inputs:
+    azureSubscription: ${{parameters.azureSubscription}}
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az deployment sub create `
+        --name agents-${{parameters.environmentName}} `
+        --location ${{parameters.location}} `
+        --template-file $Env:BUILD_SOURCESDIRECTORY/infrastructure/bicep-templates/_main_${{parameters.osType}}.bicep `
+        --parameters `
+            environmentName=${{parameters.environmentName}} `
+            location=${{parameters.location}} `
+            resourceGroupName=${{parameters.resourceGroupName}} `
+            defaultSubnetId=${{parameters.vnetId}}/subnets/${{parameters.systemPoolSubnet}} `
+            clusterName=${{parameters.clusterName}} `
+            kubernetesVersion=${{parameters.kubernetesVersion}} `
+            networkPlugin=${{parameters.networkPlugin}} `
+            systemPoolMinCount=${{parameters.systemPoolMinCount}} `
+            systemPoolMaxCount=${{parameters.systemPoolMaxCount}} `
+            autoScalerProfileUnneededTime=${{parameters.autoScalerProfileUnneededTime}}

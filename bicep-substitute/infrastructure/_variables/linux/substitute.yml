@@ -1,0 +1,21 @@
+variables:
+  location: northeurope
+  azureSubscriptionName: reg-dev-eu-tas
+  azureSubscription: reg-dev-eu-tas-serviceconnection (SPN)
+  environmentName: substitute
+  resourceGroupName: rg-k8s-$(environmentName)
+  resourceGroupOfSubnet: rg-vnet-substitute
+  resourceGroupOfRouteTable: $(resourceGroupName)-MC
+  routeTableName: k8s-$(environmentName)-agentpool
+  clusterName: k8s-$(environmentName)
+  networkPlugin: kubenet
+  vnetName: vnet-k8s-substitute
+  vnetId: /subscriptions/4b077329-ea41-4ab7-a8d3-460431da91f4/resourceGroups/$(resourceGroupOfSubnet)/providers/Microsoft.Network/virtualNetworks/$(vnetName)
+  vnetIPRange: 192.168.0.0/24
+  subnetName: snet-linux
+  subnetIPRangeLinux: 192.168.0.0/24
+  systemPoolSubnet: snet-linux
+  systemPoolMinCount: 1
+  systemPoolMaxCount: 1
+  osType: linux
+  autoScalerProfileUnneededTime: 10m #Default is 10min for the autoscaler profile, which applies to ALL nodepools in a AKS cluster
