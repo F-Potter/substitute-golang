@@ -3,6 +3,7 @@ apiVersion: apps/v1
 metadata:
   name: substitute
 spec:
+  replicas: 2
   selector:
     matchLabels:
        app: substitute
@@ -13,8 +14,12 @@ spec:
     spec:
       containers:
       - name: substitute
-        image: agentstas.azurecr.io/substitute:latest
+        image: agentstas.azurecr.io/substitute:20221003
         imagePullPolicy: Always
         ports:
         - name: containerport
           containerPort: 8080
+      tolerations:
+        - key: "CriticalAddonsOnly"
+          effect: "NoSchedule"
+          value: "true"
