@@ -1,0 +1,20 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: substitute
+spec:
+  selector:
+    matchLabels:
+       app: substitute
+  template:
+    metadata:
+      labels:
+        app: substitute
+    spec:
+      containers:
+      - name: substitute
+        image: agentstas.azurecr.io/substitute:latest
+        imagePullPolicy: Always
+        ports:
+        - name: containerport
+          containerPort: 8080
