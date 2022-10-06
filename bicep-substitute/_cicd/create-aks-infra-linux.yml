@@ -38,7 +38,6 @@ stages:
                 vnetName: ${{variables.vnetName}}
                 vnetId: ${{variables.vnetId}}
                 subnetName: ${{variables.subnetName}}
-                ipAddressCCCFirewall: ${{variables.ipAddressCCCFirewall}}
                 routeTableName: ${{variables.routeTableName}}
                 systemPoolSubnet: ${{variables.systemPoolSubnet}}
                 systemPoolMinCount: ${{variables.systemPoolMinCount}}
