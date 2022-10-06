@@ -21,7 +21,7 @@ param subnetIPRangeLinux string
 // tags object needs to be a param, because utcNow() can't be used as variable
 param tags object = {
   creationDateUTC: utcNow('yyyy-MM-dd HH:mm:ss')
-  team: 'MESO'
+  createdBy: 'Frank'
 }
 
 // resourcegroup
